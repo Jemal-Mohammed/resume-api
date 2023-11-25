@@ -1,22 +1,17 @@
 import puppeteer from 'puppeteer';
-import fs from 'fs';
+import axios from 'axios';
 
 const buildPDF = async (profile, res) => {
   try {
-    const imagePath = `https://resume-builder-kwcs.onrender.com/uploads/${profile.file}`;
+    const imageUrl = `https://resume-builder-kwcs.onrender.com/uploads/${profile.file}`;
     
-    // Validate image path
-    // if (!fs.existsSync(imagePath)) {
-    //   console.error('Image file not found:', imagePath);
-    //   res.status(404).send('Image Not Found');
-    //   return;
-    // }
+    // Fetch image content
+    const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const imageBuffer = Buffer.from(imageResponse.data, 'binary');
+    const imageSrc = `data:image/jpeg;base64,${imageBuffer.toString('base64')}`;
 
     const browser = await puppeteer.launch({ headless: 'new' });
     const page = await browser.newPage();
-    const image = fs.readFileSync(imagePath, 'base64');
-    const imageSrc = `data:image/jpeg;base64,${image}`;
-
 
     const htmlContent = `
   <!DOCTYPE html>
@@ -146,25 +141,25 @@ Personal Interests
   `;
   await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
 
-  // Handle image load errors
-  await page.waitForSelector('img').catch(error => {
-    console.error('Error waiting for image:', error);
-  });
+    // Handle image load errors
+    await page.waitForSelector('img').catch(error => {
+      console.error('Error waiting for image:', error);
+    });
 
-  const pdfBuffer = await page.pdf();
-  res.end(pdfBuffer);
+    const pdfBuffer = await page.pdf();
+    res.end(pdfBuffer);
 
-  await browser.close();
-} catch (error) {
-  if (error.name === 'PuppeteerLaunchError') {
-    console.error('Error launching Puppeteer:', error);
-  } else if (error.name === 'PuppeteerPageError') {
-    console.error('Error creating PDF from page:', error);
-  } else {
-    console.error('Unexpected error:', error);
+    await browser.close();
+  } catch (error) {
+    if (error.name === 'PuppeteerLaunchError') {
+      console.error('Error launching Puppeteer:', error);
+    } else if (error.name === 'PuppeteerPageError') {
+      console.error('Error creating PDF from page:', error);
+    } else {
+      console.error('Unexpected error:', error);
+    }
+    res.status(500).send('Internal Server Error');
   }
-  res.status(500).send('Internal Server Error');
-}
 };
 
 export default buildPDF;
