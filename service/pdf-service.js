@@ -155,7 +155,7 @@ Personal Interests
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
     // Alternatively, you can use page.goto() instead of page.setContent()
     // await page.goto('file://' + imagePath, { waitUntil: 'networkidle0' });
-    await page.waitForSelector('img'); // Wait for the image to be present in the DOM
+    await page.waitForSelector('img', { timeout: 60000 }); // Set a longer timeout, e.g., 60 seconds
     const pdfBuffer = await page.pdf();
     // Send the PDF buffer in the response
     res.end(pdfBuffer);
