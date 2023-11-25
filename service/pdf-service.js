@@ -3,7 +3,7 @@ import fs from 'fs';
 
 const buildPDF = async (profile, res) => {
   try {
-    const imagePath = `E:/Projects/web/mern/resume/uploads/${profile.file}`;
+    const imagePath = `./uploads/${profile.file}`;
     
     // Validate image path
     if (!fs.existsSync(imagePath)) {
