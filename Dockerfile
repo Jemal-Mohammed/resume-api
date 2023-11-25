@@ -8,13 +8,16 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY . .
 
-# Temporarily set the user to root
-USER root
-
 # Remove existing node_modules
 RUN rm -rf node_modules
 
-RUN npm install
+# Set the user to root temporarily for permissions fix
+USER root
+
+# Fix permissions
+RUN npm cache clean --force && \
+    npm install --unsafe-perm=true && \
+    chown -R node:node /usr/src/app
 
 # Set the user back to a non-root user
 USER node
