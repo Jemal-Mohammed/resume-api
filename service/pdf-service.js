@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 import fs from 'fs';
-import executablePath  from "puppeteer-core"
+import {executablePath}  from "puppeteer"
 const buildPDF = async (profile, res) => {
   try {
     const imagePath = `https://resume-builder-kwcs.onrender.com/uploads/${profile.file}`;
@@ -12,7 +12,7 @@ const buildPDF = async (profile, res) => {
     //   return;
     // }
 
-    const browser = await puppeteer.launch({ headless: 'new' , executablePath: executablePath()});
+    const browser = await puppeteer.launch({ headless: 'new' , executablePath: executablePath(),ignoreHTTPSErrors: true});
     const page = await browser.newPage();
     const image = fs.readFileSync(imagePath, 'base64');
     const imageSrc = `data:image/jpeg;base64,${image}`;
