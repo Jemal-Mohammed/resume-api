@@ -144,17 +144,27 @@ Personal Interests
   </html>
   
   `;
-    await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('img'); // Wait for the image to be present in the DOM
-    const pdfBuffer = await page.pdf();
-    // Send the PDF buffer in the response
-    res.end(pdfBuffer);
+  await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
 
-    await browser.close();
-  } catch (error) {
-    console.error('Error building PDF:', error);
-    res.status(500).send('Internal Server Error');
+  // Handle image load errors
+  await page.waitForSelector('img').catch(error => {
+    console.error('Error waiting for image:', error);
+  });
+
+  const pdfBuffer = await page.pdf();
+  res.end(pdfBuffer);
+
+  await browser.close();
+} catch (error) {
+  if (error.name === 'PuppeteerLaunchError') {
+    console.error('Error launching Puppeteer:', error);
+  } else if (error.name === 'PuppeteerPageError') {
+    console.error('Error creating PDF from page:', error);
+  } else {
+    console.error('Unexpected error:', error);
   }
+  res.status(500).send('Internal Server Error');
+}
 };
 
 export default buildPDF;
