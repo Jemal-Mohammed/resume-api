@@ -4,7 +4,7 @@ import fs from 'fs';
 const buildPDF = async (profile, res) => {
   try {
     const imagePath = `https://resume-builder-kwcs.onrender.com/uploads/${profile.file}`;
-    
+    console.log(imagePath);
     // Validate image path
     if (!fs.existsSync(imagePath)) {
       console.error('Image file not found:', imagePath);
