@@ -10,7 +10,7 @@ app.use(cookieParser());
 const port = 5000;
 app.use(express.json());
 app.use(cors({
-  origin: ['http://localhost:3000',"https://resume-qiy8.onrender.com"]
+  origin: ['http://localhost:3000',"https://resume-qiy8.onrender.com"],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 }));
