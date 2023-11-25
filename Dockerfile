@@ -11,6 +11,9 @@ COPY . .
 # Temporarily set the user to root
 USER root
 
+# Remove existing node_modules
+RUN rm -rf node_modules
+
 RUN npm install
 
 # Set the user back to a non-root user
