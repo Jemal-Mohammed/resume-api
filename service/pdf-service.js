@@ -19,14 +19,32 @@ const buildPDF = async (profile, res) => {
     const imagePath = `https://resume-builder-8dkx.onrender.com/uploads/${profile.file}`;
 
     // Use page.goto to navigate to the image URL
-    // await page.goto(imagePath, { waitUntil: 'domcontentloaded' });
-    await page.goto(imagePath, { waitUntil: 'networkidle2' });
+    await page.goto(imagePath, { waitUntil: 'domcontentloaded' });
+    const imagePromise = new Promise((resolve) => {
+        page.on('request', (request) => {
+        if (request.url() === imagePath) {
+        request.once('response', resolve);
+        }
+        });
+        });
+    
+
+// Wait for the image to load completely
+await imagePromise;
+// Check if the image is visible
+const imageVisible = await page.evaluate(() => document.querySelector('img').complete);
+if (!imageVisible) {
+throw new Error('Image failed to load');
+}
+const imageSrc = await page.evaluate(() => {
+const img = document.querySelector('img');
+return img ? img.src : null;
+});
+// Optimize image before embedding it in HTML
+// \(Optional \- consider using a dedicated image optimization library\)
+const optimizedImage = await optimizedImage(imageSrc);
 
 
-    const imageSrc = await page.evaluate(() => {
-      const img = document.querySelector('img');
-      return img ? img.src : null;
-    });
     const htmlContent = `
   <!DOCTYPE html>
   <html lang="en">
@@ -82,7 +100,7 @@ const buildPDF = async (profile, res) => {
   <body>
   
       <h1>${profile.user.name}</h1>
-      <img src="${imageSrc}" alt="no img"/>
+      <img src="${optimizedImage}" alt="no img"/>
       <!-- Personal Information Section -->
       <p>- Curriculum Vitae</p>
       <div class="section">
@@ -157,12 +175,8 @@ Personal Interests
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
     // Alternatively, you can use page.goto() instead of page.setContent()
     // await page.goto('file://' + imagePath, { waitUntil: 'networkidle0' });
-  // ...
-await new Promise(resolve => setTimeout(resolve, 120000)); // Wait for 5 seconds
-await page.waitForSelector('img', { visible: true }); // Wait for the image to be visible
-// ...
-
-          const pdfBuffer = await page.pdf();
+    await page.waitForSelector('img'); // Wait for the image to be present in the DOM
+    const pdfBuffer = await page.pdf();
     // Send the PDF buffer in the response
     res.end(pdfBuffer);
 
