@@ -13,10 +13,8 @@ const buildPDF = async (profile, res) => {
     // }
     const { executablePath } = await configurePuppeteer();
 
-   const browser = await puppeteer.launch({ 
-      headless: 'new',
-      executablePath
-    });
+    const browser = await puppeteer.launch({ headless: true });
+
     const page = await browser.newPage();
     const image = fs.readFileSync(imagePath, 'base64');
     const imageSrc = `data:image/jpeg;base64,${image}`;
