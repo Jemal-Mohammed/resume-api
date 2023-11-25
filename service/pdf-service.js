@@ -146,8 +146,14 @@ Personal Interests
     res.end(pdfBuffer);
 
     await browser.close();
-  } catch (error) {
-    console.error('Error building PDF:', error);
+} catch (error) {
+    if (error.name === 'PuppeteerLaunchError') {
+      console.error('Error launching Puppeteer:', error);
+    } else if (error.name === 'PuppeteerPageError') {
+      console.error('Error creating PDF from page:', error);
+    } else {
+      console.error('Unexpected error:', error);
+    }
     res.status(500).send('Internal Server Error');
   }
 };
