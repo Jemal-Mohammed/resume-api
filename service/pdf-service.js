@@ -79,7 +79,6 @@ const buildPDF = async (profile, res) => {
   <body>
   
       <h1>${profile.user.name}</h1>
-    //   <img src="${imageSrc}" alt="no img"/>
       <!-- Personal Information Section -->
       <p>- Curriculum Vitae</p>
       <div class="section">
@@ -152,8 +151,6 @@ Personal Interests
   `;
     // Use the waitUntil option to wait for the page to load
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
-    // Alternatively, you can use page.goto() instead of page.setContent()
-    // await page.goto('file://' + imagePath, { waitUntil: 'networkidle0' });
     // await page.waitForSelector('img'); // Wait for the image to be present in the DOM
     const pdfBuffer = await page.pdf();
     // Send the PDF buffer in the response
