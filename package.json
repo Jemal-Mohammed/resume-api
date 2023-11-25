@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index",
+    "install-puppeteer": "npm install puppeteer --unsafe-perm=true --allow-root",
     "run install": "node_modules/puppeteer",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
