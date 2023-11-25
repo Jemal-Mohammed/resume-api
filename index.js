@@ -14,6 +14,7 @@ app.use(cors({
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 }));
+
 app.use(router);
 dotenv.config({
   path:'.env'

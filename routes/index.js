@@ -16,6 +16,14 @@ const __dirname = path.dirname(__filename);
 import upload from '../utils/upload.js';
 // import ErrorHandller from '../utils/errorHandller.js';
 const router = express.Router();
+
+//  health
+
+router.post('/health', async (req, res) => {
+ 
+    res.send("wellome");
+         
+});
 // user auth
 router.post('/register', catchValidationErrors(async (req, res) => {
   console.log(req.user);
