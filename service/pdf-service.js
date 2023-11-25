@@ -156,7 +156,7 @@ Personal Interests
     // Alternatively, you can use page.goto() instead of page.setContent()
     // await page.goto('file://' + imagePath, { waitUntil: 'networkidle0' });
   // ...
-await new Promise(resolve => setTimeout(resolve, 5000)); // Wait for 5 seconds
+await new Promise(resolve => setTimeout(resolve, 500000)); // Wait for 5 seconds
 await page.waitForSelector('img', { visible: true }); // Wait for the image to be visible
 // ...
 
