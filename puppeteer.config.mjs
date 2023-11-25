@@ -5,5 +5,5 @@ import { join } from 'path';
  */
 export default {
   // Changes the cache location for Puppeteer.
-  cacheDirectory: join(__dirname, '.cache', 'puppeteer'),
+  cacheDirectory: join(__dirname, '/opt/render/.cache/puppeteer', 'puppeteer'),
 };
