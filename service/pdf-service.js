@@ -1,49 +1,28 @@
+// service/pdf-service.js
 import puppeteer from 'puppeteer';
+import fs from 'fs';
 
 const buildPDF = async (profile, res) => {
+  // console.log(profile);
   try {
-    const browser = await puppeteer.launch({
+    // Use the correct launch options for Render.com
+    const browser = await puppeteer.launch({ 
       args: [
-        '--disable-setuid-sandbox',
-        '--no-sandbox',
-        '--single-process',
-        '--no-zygote',
+        "--disable-setuid-sandbox",
+        "--no-sandbox",
+        "--single-process",
+        "--no-zygote",
       ],
       executablePath:
-        process.env.NODE_ENV === 'production'
+        process.env.NODE_ENV === "production"
           ? process.env.PUPPETEER_EXECUTABLE_PATH
           : puppeteer.executablePath(),
     });
-
     const page = await browser.newPage();
-    const imagePath = `https://resume-builder-8dkx.onrender.com/uploads/${profile.file}`;
-
-    // Use page.goto to navigate to the image URL
-    await page.goto(imagePath, { waitUntil: 'domcontentloaded' });
-    const imagePromise = new Promise((resolve) => {
-        page.on('request', (request) => {
-        if (request.url() === imagePath) {
-        request.once('response', resolve);
-        }
-        });
-        });
-    
-
-// Wait for the image to load completely
-await imagePromise;
-// Check if the image is visible
-const imageVisible = await page.evaluate(() => document.querySelector('img').complete);
-if (!imageVisible) {
-throw new Error('Image failed to load');
-}
-const imageSrc = await page.evaluate(() => {
-const img = document.querySelector('img');
-return img ? img.src : null;
-});
-// Optimize image before embedding it in HTML
-// \(Optional \- consider using a dedicated image optimization library\)
-const optimizedImage = await optimizedImage(imageSrc);
-
+    // const imagePath = `https://resume-builder-8dkx.onrender.com/uploads/${profile.file}`;
+    // // const imagePath = `E:/Projects/web/mern/resume/uploads/${profile.file}`;
+    // const image = fs.readFileSync(imagePath, 'base64');
+    // const imageSrc = `data:image/jpeg;base64,${image}`;
 
     const htmlContent = `
   <!DOCTYPE html>
@@ -100,7 +79,7 @@ const optimizedImage = await optimizedImage(imageSrc);
   <body>
   
       <h1>${profile.user.name}</h1>
-      <img src="${optimizedImage}" alt="no img"/>
+    //   <img src="${imageSrc}" alt="no img"/>
       <!-- Personal Information Section -->
       <p>- Curriculum Vitae</p>
       <div class="section">
@@ -175,7 +154,7 @@ Personal Interests
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
     // Alternatively, you can use page.goto() instead of page.setContent()
     // await page.goto('file://' + imagePath, { waitUntil: 'networkidle0' });
-    await page.waitForSelector('img'); // Wait for the image to be present in the DOM
+    // await page.waitForSelector('img'); // Wait for the image to be present in the DOM
     const pdfBuffer = await page.pdf();
     // Send the PDF buffer in the response
     res.end(pdfBuffer);
