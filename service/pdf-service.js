@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer';
 
 const buildPDF = async (profile, res) => {
   try {
-    const browser = await puppeteer.launch({headless:'new',
+    const browser = await puppeteer.launch({
       args: [
         '--disable-setuid-sandbox',
         '--no-sandbox',
