@@ -19,7 +19,9 @@ const buildPDF = async (profile, res) => {
     const imagePath = `https://resume-builder-8dkx.onrender.com/uploads/${profile.file}`;
 
     // Use page.goto to navigate to the image URL
-    await page.goto(imagePath, { waitUntil: 'domcontentloaded' });
+    // await page.goto(imagePath, { waitUntil: 'domcontentloaded' });
+    await page.goto(imagePath, { waitUntil: 'networkidle2' });
+
 
     const imageSrc = await page.evaluate(() => {
       const img = document.querySelector('img');
