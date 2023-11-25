@@ -1,14 +1,13 @@
 // service/pdf-service.js
 import puppeteer from 'puppeteer';
 import fs from 'fs';
+
 const buildPDF = async (profile, res) => {
   // console.log(profile);
   try {
     // Use the correct launch options for Render.com
     const browser = await puppeteer.launch({ 
       headless: true, // Set headless mode to true
-      args: ['--no-sandbox', '--disable-setuid-sandbox'], // Add these arguments
-      // executablePath: '/path/to/chrome', // Optionally, provide the path to Chrome if you have installed it manually
     });
     const page = await browser.newPage();
     const imagePath = `https://resume-builder-kwcs.onrender.com/uploads/${profile.file}`;
