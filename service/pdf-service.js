@@ -1,16 +1,21 @@
-// service/pdf-service.js
 import puppeteer from 'puppeteer';
 import fs from 'fs';
+
 const buildPDF = async (profile, res) => {
-  // console.log(profile);
   try {
-    const browser = await puppeteer.launch({ headless: 'new' });
-    // const browser = await puppeteer.launch({headless: 'new'});
-    const page = await browser.newPage();
     const imagePath = `https://resume-builder-kwcs.onrender.com/uploads/${profile.file}`;
+    
+    // Validate image path
+    // if (!fs.existsSync(imagePath)) {
+    //   console.error('Image file not found:', imagePath);
+    //   res.status(404).send('Image Not Found');
+    //   return;
+    // }
+
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
     const image = fs.readFileSync(imagePath, 'base64');
     const imageSrc = `data:image/jpeg;base64,${image}`;
-
 
 
     const htmlContent = `
