@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer';
 
 const buildPDF = async (profile, res) => {
   try {
-    const browser = await puppeteer.launch({
+    const browser = await puppeteer.launch({headless:'new',
       args: [
         '--disable-setuid-sandbox',
         '--no-sandbox',
@@ -156,7 +156,7 @@ Personal Interests
     // Alternatively, you can use page.goto() instead of page.setContent()
     // await page.goto('file://' + imagePath, { waitUntil: 'networkidle0' });
   // ...
-await new Promise(resolve => setTimeout(resolve, 500000)); // Wait for 5 seconds
+await new Promise(resolve => setTimeout(resolve, 120000)); // Wait for 5 seconds
 await page.waitForSelector('img', { visible: true }); // Wait for the image to be visible
 // ...
 
