@@ -1,29 +1,30 @@
-// service/pdf-service.js
 import puppeteer from 'puppeteer';
-import fs from 'fs';
 
 const buildPDF = async (profile, res) => {
-  // console.log(profile);
   try {
-    // Use the correct launch options for Render.com
-    const browser = await puppeteer.launch({ 
+    const browser = await puppeteer.launch({
       args: [
-        "--disable-setuid-sandbox",
-        "--no-sandbox",
-        "--single-process",
-        "--no-zygote",
+        '--disable-setuid-sandbox',
+        '--no-sandbox',
+        '--single-process',
+        '--no-zygote',
       ],
       executablePath:
-        process.env.NODE_ENV === "production"
+        process.env.NODE_ENV === 'production'
           ? process.env.PUPPETEER_EXECUTABLE_PATH
           : puppeteer.executablePath(),
     });
+
     const page = await browser.newPage();
     const imagePath = `https://resume-builder-8dkx.onrender.com/uploads/${profile.file}`;
-    // const imagePath = `E:/Projects/web/mern/resume/uploads/${profile.file}`;
-    const image = fs.readFileSync(imagePath, 'base64');
-    const imageSrc = `data:image/jpeg;base64,${image}`;
 
+    // Use page.goto to navigate to the image URL
+    await page.goto(imagePath, { waitUntil: 'domcontentloaded' });
+
+    const imageSrc = await page.evaluate(() => {
+      const img = document.querySelector('img');
+      return img ? img.src : null;
+    });
     const htmlContent = `
   <!DOCTYPE html>
   <html lang="en">
