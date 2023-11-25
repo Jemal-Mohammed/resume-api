@@ -4,13 +4,17 @@ import fs from 'fs';
 const buildPDF = async (profile, res) => {
   // console.log(profile);
   try {
-    const browser = await puppeteer.launch({ headless: 'new' ,});
+    // Use the correct launch options for Render.com
+    const browser = await puppeteer.launch({ 
+      headless: true, // Set headless mode to true
+      args: ['--no-sandbox', '--disable-setuid-sandbox'], // Add these arguments
+      // executablePath: '/path/to/chrome', // Optionally, provide the path to Chrome if you have installed it manually
+    });
     const page = await browser.newPage();
-    const imagePath = `Ehttps://resume-builder-kwcs.onrender.com/uploads/${profile.file}`;
+    const imagePath = `https://resume-builder-kwcs.onrender.com/uploads/${profile.file}`;
+    // const imagePath = `E:/Projects/web/mern/resume/uploads/${profile.file}`;
     const image = fs.readFileSync(imagePath, 'base64');
     const imageSrc = `data:image/jpeg;base64,${image}`;
-
-
 
     const htmlContent = `
   <!DOCTYPE html>
@@ -138,7 +142,10 @@ Personal Interests
   </html>
   
   `;
-    await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
+    // Use the waitUntil option to wait for the page to load
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+    // Alternatively, you can use page.goto() instead of page.setContent()
+    // await page.goto('file://' + imagePath, { waitUntil: 'networkidle0' });
     await page.waitForSelector('img'); // Wait for the image to be present in the DOM
     const pdfBuffer = await page.pdf();
     // Send the PDF buffer in the response
