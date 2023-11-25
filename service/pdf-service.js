@@ -158,7 +158,8 @@ Personal Interests
     await page.waitForFunction(() => {
         const img = document.querySelector('img');
         return img && img.complete && img.naturalHeight !== 0;
-      }, { timeout: 60000 });
+      }, { timeout: 120000 });  // Increase the timeout to 120 seconds
+      
           const pdfBuffer = await page.pdf();
     // Send the PDF buffer in the response
     res.end(pdfBuffer);
