@@ -19,7 +19,7 @@ const router = express.Router();
 
 //  health
 
-router.post('/health', async (req, res) => {
+router.get('/health', async (req, res) => {
  
     res.send("wellome");
          
