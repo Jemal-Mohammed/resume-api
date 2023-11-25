@@ -22,4 +22,4 @@ RUN npm cache clean --force && \
 # Set the user back to a non-root user
 USER node
 
-CMD [ "node", "index.js" ]
+CMD [ "nodemon", "index.js" ]
