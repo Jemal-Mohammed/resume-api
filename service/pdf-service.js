@@ -7,7 +7,6 @@ const buildPDF = async (profile, res) => {
   try {
     // Use the correct launch options for Render.com
     const browser = await puppeteer.launch({ 
-      headless: "new", // Set headless mode to true
       args: [
         "--disable-setuid-sandbox",
         "--no-sandbox",
