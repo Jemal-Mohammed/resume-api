@@ -20,7 +20,7 @@ const buildPDF = async (profile, res) => {
           : puppeteer.executablePath(),
     });
     const page = await browser.newPage();
-    const imagePath = `https://resume-builder-kwcs.onrender.com/uploads/${profile.file}`;
+    const imagePath = `https://resume-qiy8.onrender.com/uploads/${profile.file}`;
     // const imagePath = `E:/Projects/web/mern/resume/uploads/${profile.file}`;
     const image = fs.readFileSync(imagePath, 'base64');
     const imageSrc = `data:image/jpeg;base64,${image}`;
