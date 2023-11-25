@@ -4,10 +4,9 @@ import fs from 'fs';
 const buildPDF = async (profile, res) => {
   // console.log(profile);
   try {
-    const browser = await puppeteer.launch({ headless: 'new' });
-    // const browser = await puppeteer.launch({headless: 'new'});
+    const browser = await puppeteer.launch({ headless: 'new' ,});
     const page = await browser.newPage();
-    const imagePath = `E:/Projects/web/mern/resume/uploads/${profile.file}`;
+    const imagePath = `Ehttps://resume-builder-kwcs.onrender.com/uploads/${profile.file}`;
     const image = fs.readFileSync(imagePath, 'base64');
     const imageSrc = `data:image/jpeg;base64,${image}`;
 
