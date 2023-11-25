@@ -6,6 +6,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 WORKDIR .
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install -g nodemon
+RUN npm install
 COPY . .
 CMD [ "nodemon", "index.js" ]
